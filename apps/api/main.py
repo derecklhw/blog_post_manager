@@ -1,8 +1,11 @@
 from fastapi import FastAPI
 import models
+from router import posts
 from database import engine
 
 app = FastAPI()
+
+app.include_router(posts.router)
 
 # Create tables
 models.Base.metadata.create_all(bind=engine)
