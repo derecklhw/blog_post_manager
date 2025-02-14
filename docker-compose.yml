@@ -21,5 +21,13 @@ services:
     ports:
       - "8000:8000"
 
+  frontend:
+    build: apps/frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./apps/frontend:/frontend
+      - /frontend/node_modules
+
 volumes:
   postgres_data:
