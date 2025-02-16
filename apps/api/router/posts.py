@@ -17,6 +17,18 @@ def get_posts(db: Session = Depends(get_db)):
 
     return post_query
 
+@router.get('/{id}', response_model=schemas.PostBase)
+def get_post(id: int, db: Session = Depends(get_db)):
+    post_query = db.query(models.Post).filter(models.Post.id == id).first()
+
+    if not post_query:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Post with id {id} not found"
+        )
+    
+    return post_query
+
 @router.post('/', status_code=status.HTTP_201_CREATED, response_model=schemas.PostBase)
 def create_post(post: schemas.CreatePost, db: Session = Depends(get_db)):
     created_post = models.Post(**post.dict())
@@ -37,7 +49,7 @@ def update_post(id: int, post: schemas.CreatePost, db: Session = Depends(get_db)
             detail=f"Post with id {id} not found"
         )
     
-    post_query.update(post.dict(exclude={'id'}), synchronize_session=False)
+    post_query.update(post.dict(exclude={'id', 'created_at'}), synchronize_session=False)
     db.commit()
     return post_query.first()
 
