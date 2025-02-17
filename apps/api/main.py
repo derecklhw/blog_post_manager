@@ -3,6 +3,9 @@ from fastapi.middleware.cors import CORSMiddleware
 import models
 from router import posts
 from database import engine
+from logger import logger
+from middleware import log_middleware
+from starlette.middleware.base import BaseHTTPMiddleware
 
 app = FastAPI()
 
@@ -18,6 +21,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.add_middleware(BaseHTTPMiddleware, dispatch=log_middleware)
+
+logger.info("Starting server")
 
 app.include_router(posts.router)
 
