@@ -31,7 +31,19 @@ def get_post(id: int, db: Session = Depends(get_db)):
 
 @router.post('/', status_code=status.HTTP_201_CREATED, response_model=schemas.PostBase)
 def create_post(post: schemas.CreatePost, db: Session = Depends(get_db)):
-    created_post = models.Post(**post.dict())
+    
+    if (post.title is None) or (post.content is None):
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="Title and content are required"
+        )
+    if (not post.title.strip()) or (not post.content.strip()):
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="Title and content cannot be empty"
+        )
+        
+    created_post = models.Post(**post.model_dump())
     db.add(created_post)
     db.commit()
     db.refresh(created_post)
@@ -49,7 +61,7 @@ def update_post(id: int, post: schemas.CreatePost, db: Session = Depends(get_db)
             detail=f"Post with id {id} not found"
         )
     
-    post_query.update(post.dict(exclude={'id', 'created_at'}), synchronize_session=False)
+    post_query.update(post.model_dump(exclude={'id', 'created_at'}), synchronize_session=False)
     db.commit()
     return post_query.first()
 

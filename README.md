@@ -11,10 +11,18 @@ backend development.
 
 ## Run
 
-### Development
-
-Run the following command to start the development environment and access the application at [http://localhost:3000](http://localhost:3000).
+Build and run the multi-container application with its dependencies.
 
 ```bash
 docker-compose up -d --build
+```
+
+After running the command, the application will be available at `http://localhost:3000`.
+
+### Testing
+
+Run the following command to run the tests.
+
+```bash
+docker exec -it blog_post_manager-api-1 pytest tests/.
 ```

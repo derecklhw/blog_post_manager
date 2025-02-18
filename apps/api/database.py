@@ -1,6 +1,5 @@
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, declarative_base
 
 # url format: postgresql://<username>:<password>@<host>:<port>/<database_name>
 SQLALCHEMY_DATABASE_URL = 'postgresql://postgres:Bright#1270@db:5432/blog_post_manager'
